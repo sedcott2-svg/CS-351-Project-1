@@ -4,5 +4,5 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/bucketexample194352346456/lab5/"
+  base: "/bucketexample194352346456/proj1/"
 })

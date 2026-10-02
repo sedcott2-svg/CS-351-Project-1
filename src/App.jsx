@@ -16,6 +16,10 @@ function App() {
     login: "",
     password: "",
     email: "",
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
     phone: "",
   });
   const [createAccountErrors, setCreateAccountErrors] = useState({});
@@ -122,6 +126,8 @@ function App() {
   function handleCreateAccountSubmit(event) {
     event.preventDefault();
     const errors = {};
+    const optionalAddressFields = [createAccountInfo.street, createAccountInfo.city, createAccountInfo.state, createAccountInfo.zip];
+    const hasAddressData = optionalAddressFields.some(value => value.trim() !== "");
 
     if (!createAccountInfo.login.trim()) {
       errors.login = "Login is required.";
@@ -135,6 +141,25 @@ function App() {
       errors.email = "Email is required.";
     } else if (!validateEmail(createAccountInfo.email)) {
       errors.email = "Please enter a valid email address.";
+    }
+
+    if (hasAddressData) {
+      if (!createAccountInfo.street.trim()) {
+        errors.street = "Street is required when any address information is provided.";
+      }
+      if (!createAccountInfo.city.trim()) {
+        errors.city = "City is required when any address information is provided.";
+      }
+      if (!createAccountInfo.state.trim()) {
+        errors.state = "State is required when any address information is provided.";
+      } else if (!/^[A-Za-z]{2}$/.test(createAccountInfo.state.trim())) {
+        errors.state = "State must be a 2-letter abbreviation.";
+      }
+      if (!createAccountInfo.zip.trim()) {
+        errors.zip = "ZIP code is required when any address information is provided.";
+      } else if (!/^\d{5}(-\d{4})?$/.test(createAccountInfo.zip.trim())) {
+        errors.zip = "ZIP code must be 5 digits or ZIP+4.";
+      }
     }
 
     if (createAccountInfo.phone.trim() && !/^[0-9()+\-.\s]{7,20}$/.test(createAccountInfo.phone.trim())) {
@@ -337,6 +362,70 @@ function App() {
                       placeholder="Enter your email"
                     />
                     {createAccountErrors.email && <div className="invalid-feedback d-block">{createAccountErrors.email}</div>}
+                  </div>
+
+                  <div className="col-12">
+                    <label className="form-label" htmlFor="create-street">Street</label>
+                    <input
+                      id="create-street"
+                      className={`form-control account-input ${createAccountErrors.street ? "is-invalid" : ""}`}
+                      type="text"
+                      value={createAccountInfo.street}
+                      onChange={event => {
+                        setCreateAccountInfo({ ...createAccountInfo, street: event.target.value });
+                        setCreateAccountErrors({ ...createAccountErrors, street: "" });
+                      }}
+                      placeholder="Street address (optional)"
+                    />
+                    {createAccountErrors.street && <div className="invalid-feedback d-block">{createAccountErrors.street}</div>}
+                  </div>
+
+                  <div className="col-md-5">
+                    <label className="form-label" htmlFor="create-city">City</label>
+                    <input
+                      id="create-city"
+                      className={`form-control account-input ${createAccountErrors.city ? "is-invalid" : ""}`}
+                      type="text"
+                      value={createAccountInfo.city}
+                      onChange={event => {
+                        setCreateAccountInfo({ ...createAccountInfo, city: event.target.value });
+                        setCreateAccountErrors({ ...createAccountErrors, city: "" });
+                      }}
+                      placeholder="City"
+                    />
+                    {createAccountErrors.city && <div className="invalid-feedback d-block">{createAccountErrors.city}</div>}
+                  </div>
+
+                  <div className="col-md-3">
+                    <label className="form-label" htmlFor="create-state">State</label>
+                    <input
+                      id="create-state"
+                      className={`form-control account-input ${createAccountErrors.state ? "is-invalid" : ""}`}
+                      type="text"
+                      value={createAccountInfo.state}
+                      onChange={event => {
+                        setCreateAccountInfo({ ...createAccountInfo, state: event.target.value });
+                        setCreateAccountErrors({ ...createAccountErrors, state: "" });
+                      }}
+                      placeholder="CA"
+                    />
+                    {createAccountErrors.state && <div className="invalid-feedback d-block">{createAccountErrors.state}</div>}
+                  </div>
+
+                  <div className="col-md-4">
+                    <label className="form-label" htmlFor="create-zip">ZIP</label>
+                    <input
+                      id="create-zip"
+                      className={`form-control account-input ${createAccountErrors.zip ? "is-invalid" : ""}`}
+                      type="text"
+                      value={createAccountInfo.zip}
+                      onChange={event => {
+                        setCreateAccountInfo({ ...createAccountInfo, zip: event.target.value });
+                        setCreateAccountErrors({ ...createAccountErrors, zip: "" });
+                      }}
+                      placeholder="12345"
+                    />
+                    {createAccountErrors.zip && <div className="invalid-feedback d-block">{createAccountErrors.zip}</div>}
                   </div>
 
                   <div className="col-12">
